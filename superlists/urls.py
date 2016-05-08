@@ -17,10 +17,9 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth import views
 #from django.contrib import admin
 from lists import views
+from lists import urls as list_urls
 
 urlpatterns = [
     url(r'^$', views.home_page, name='home'),
-    url(r'^lists/(\d+)/$', views.view_list, name = 'view_list'),
-    url(r'^lists/(\d+)/new_item$', views.add_item, name = 'add_item'),
-    url(r'^lists/new$', views.new_list, name="new_list"),
+    url(r'^lists/', include(list_urls)),
 ]
