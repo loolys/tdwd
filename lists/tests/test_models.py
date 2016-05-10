@@ -27,7 +27,9 @@ class ListAndItemModelsTest(TestCase):
         self.assertEqual(saved_items.count(), 2)
 
         first_saved_item = saved_items[0]
+        #print(first_saved_item.text)
         second_saved_item = saved_items[1]
+        #print(second_saved_item.text)
         self.assertEqual(first_saved_item.text, 'The first (ever) list item')
         self.assertEqual(first_saved_item.list, list_)
         self.assertEqual(second_saved_item.text, 'Item the second')
@@ -44,3 +46,14 @@ class ListAndItemModelsTest(TestCase):
         self.assertEqual(list1.get_absolute_url(), '/lists/%d/' % (list1.id,))
             
             
+    def test_cannot_save_duplicate_items(self):
+        list1 = List.objects.create()
+        Item.objects.create(list=list1, text="bla")
+        with self.assertRaises(ValidationError):
+            Item.objects.create(list=list1, text="bla")
+            
+    def test_CAN_save_same_item_to_different_lists(self):
+        list1 = List.objects.create()
+        list2 = List.objects.create()
+        Item.objects.create(list=list1, text="bla")
+        Item.objects.create(list=list2, text="bla") #should not raise
